@@ -1,7 +1,7 @@
+import os
 import openpyxl
 import statistics
 import matplotlib.pyplot as plt
-
 from utils import valid_file_name
 
 column_headers = {
@@ -12,7 +12,8 @@ column_headers = {
 }
 
 def get_sheet(file_name: str):
-    book = openpyxl.load_workbook(file_name, read_only=True)
+    full_path = os.path.join('files', file_name)
+    book = openpyxl.load_workbook(full_path, read_only=True)
     sheet = book.active
     return sheet
 
@@ -71,7 +72,6 @@ if __name__ == '__main__':
         qh_column_number = get_column_by_header(sheet, column_headers['arg_2'])
         temp_column_number = get_column_by_header(sheet, column_headers['arg_4'])
 
-        # Проверка
         if None in [voltage_column_number, qh_column_number]:
             print("❌ Ошибка: не найдены колонки Voltage или Qh!")
             exit()
@@ -105,9 +105,15 @@ if __name__ == '__main__':
         print(f"{'Voltage':<12} {'Медиана Qh':<15} {'Медиана Th':<15}")
         print("="*80)
 
+        all_temperatures = []
+        all_qh = []
+
         for voltage in sorted(unique_voltages):
             qh_values = qh_by_voltage.get(voltage, [])
             temp_values = temp_by_voltage.get(voltage, [])
+
+            all_temperatures.extend(temp_values)
+            all_qh.extend(qh_values)
 
             qh_median = statistics.median(qh_values) if qh_values else None
             temp_median = statistics.median(temp_values) if temp_values else None
@@ -121,17 +127,6 @@ if __name__ == '__main__':
                 print(f"{voltage:<12.1f} {'N/A':<15}  {temp_median:<15.2f}")
             else:
                 print(f"{voltage:<12.1f} {'Нет данных':<15}  {'Нет данных':<15}")
-                
-        all_temperatures = []
-        all_qh = []
-
-        for voltage in unique_voltages:
-            qh_values = qh_by_voltage.get(voltage, [])
-            temp_values = temp_by_voltage.get(voltage, [])
-            
-            # Добавляем все пары (qh, temperature) для этого напряжения
-            all_temperatures.extend(temp_values)
-            all_qh.extend(qh_values)
 
         # Построение графика
         plt.figure(figsize=(10, 6))

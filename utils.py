@@ -7,9 +7,9 @@ def valid_file_name():
     for file in files:
         if '.xlsx' in file and '~$' not in file:
             valid_files.append(file)
-    return valid_files
+    return sorted(valid_files, key=lambda x: int(x.split('_G')[1].split('.')[0]))
 
 
 if __name__ == '__main__':
     valid_files = valid_file_name()
-    print(valid_files)
+    print(sorted(valid_files, key=lambda x: int(x.split('_G')[1].split('.')[0])))

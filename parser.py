@@ -8,7 +8,10 @@ column_headers = {
     'arg_1': 'Voltage',
     'arg_2': 'Qh',
     'arg_3': 'consumption',
-    'arg_4': 'Th'
+    'arg_4': 'Th',
+    'Qiv': 'Qiv',
+    'Tin': 'Tin',
+    'Tout': 'Tout'
 }
 
 def get_sheet(file_name: str):
@@ -121,12 +124,6 @@ if __name__ == '__main__':
 
             if qh_median and temp_median:
                 print(f"{voltage:<12.1f} {qh_median:<15.4f}  {temp_median:<15.2f}")
-            elif qh_median:
-                print(f"{voltage:<12.1f} {qh_median:<15.4f}  {'N/A':<15}")
-            elif temp_median:
-                print(f"{voltage:<12.1f} {'N/A':<15}  {temp_median:<15.2f}")
-            else:
-                print(f"{voltage:<12.1f} {'Нет данных':<15}  {'Нет данных':<15}")
 
         # Построение графика
         plt.figure(figsize=(10, 6))

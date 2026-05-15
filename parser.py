@@ -14,11 +14,13 @@ column_headers = {
     'Tout': 'Tout'
 }
 
+
 def get_sheet(file_name: str):
     full_path = os.path.join('files', file_name)
     book = openpyxl.load_workbook(full_path, read_only=True)
     sheet = book.active
     return sheet
+
 
 def convert_consumption(sheet, column_headers):
     consumption_col = get_column_by_header(sheet, column_headers['arg_3'])
@@ -29,11 +31,13 @@ def convert_consumption(sheet, column_headers):
         return round((consumption * 60_000_000) / 100) * 100
     return None
 
+
 def get_column_by_header(sheet, header_name: str) -> int | None:
     for col_num, cell in enumerate(sheet[1], start=1):
         if cell.value == header_name:
             return col_num
     return None
+
 
 def get_unique_voltage_value(sheet, voltage_idx):
     arg_values = set()
@@ -46,6 +50,7 @@ def get_unique_voltage_value(sheet, voltage_idx):
                 except (ValueError, TypeError):
                     pass
     return sorted(arg_values)
+
 
 def get_temperature_by_voltage(sheet, temp_idx, voltage_idx):
     temp_by_voltage = {}
@@ -120,7 +125,6 @@ if __name__ == '__main__':
 
             qh_median = statistics.median(qh_values) if qh_values else None
             temp_median = statistics.median(temp_values) if temp_values else None
-
 
             if qh_median and temp_median:
                 print(f"{voltage:<12.1f} {qh_median:<15.4f}  {temp_median:<15.2f}")
